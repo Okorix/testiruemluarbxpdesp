@@ -305,7 +305,7 @@ local function updateEsp()
                             esp.activeweapontext.Visible = true
                         end
                     else
-                        esp.distance.Visible = false
+                        esp.activeweapontext.Visible = false
                     end
 
                     if ESP_SETTINGS.ShowSkeletons and ESP_SETTINGS.Enabled then
