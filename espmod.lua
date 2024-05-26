@@ -781,25 +781,37 @@ Players.PlayerRemoving:Connect(function(player)
     removeEsp(player)
 end)
 
-for _, charfolder in ipairs(workspace.AiZones:GetChildren()) do
-    for __,char in ipairs(charfolder:GetChildren()) do
-        if char:FindFirstChild("Humanoid") then
-            createEspNPC(char)
+local AiZones = workspace.AiZones
+local function CheckIfIsNpc(Obj)
+    if Obj:FindFirstChild("HumanoidRootPart") then
+        return true
+    end
+    return false
+end
+for _______,ChildFolders in pairs(AiZones:GetChildren()) do
+    for ___,Object in pairs(ChildFolders:GetChildren()) do
+        local Check = CheckIfIsNpc(Object)
+        if Check == true then
+            createEspNPC(Object)
         end
     end
-    charfolder.ChildAdded:Connect(function(char)
-        if char:FindFirstChild("Humanoid") then
-            createEspNPC(char)
-        end
-    end)
-    charfolder.ChildRemoved:Connect(function(char)
-        if char:FindFirstChild("Humanoid") then
-            removeEspNPC(char)
-        end
-    end)
 end
+
 
 RunService.RenderStepped:Connect(updateEsp)
 RunService.RenderStepped:Connect(updateEspNPC)
+RunService.RenderStepped:Connect(function()
+    wait(.1)
+    for _______,ChildFolders in pairs(AiZones:GetChildren()) do
+        for ___,Object in pairs(ChildFolders:GetChildren()) do
+            local Check = CheckIfIsNpc(Object)
+            if Check == true then
+                if not cacheNPC[Object] then
+                    createEspNPC(Object)
+                end
+            end
+        end
+    end
+end)
 
 return ESP_SETTINGS
