@@ -431,6 +431,22 @@ Sections.MiscSection:AddToggle({
         CToZoomEnabled = Valuee
 	end
 })
+Sections.MiscSection:AddButton({
+	enabled = true,
+	text = "Remove fog",
+	flag = "RemoveFog",
+	tooltip = "",
+	risky = false,
+	confirm = false, -- shows confirm button
+	callback = function(DaNaxuiEto)
+		Lighting.FogEnd = 100000
+		for i,v in pairs(Lighting:GetDescendants()) do
+			if v:IsA("Atmosphere") then
+				v:Destroy()
+			end
+		end
+	end
+})
 Sections.AimbotSection:AddToggle({
 	enabled = true,
 	text = "Enabled",
