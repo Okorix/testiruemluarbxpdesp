@@ -210,7 +210,7 @@ local function updateEspNPC()
 
                     if ESP_SETTINGS.ShowName and ESP_SETTINGS.Enabled then
                         esp.name.Visible = true
-                        esp.name.Text = string.lower(character.Name)
+                        esp.name.Text = character.Name.." (NPC)"
                         esp.name.Position = Vector2.new(boxSize.X / 2 + boxPosition.X, boxPosition.Y - 16)
                         esp.name.Color = ESP_SETTINGS.NameColor
                     else
@@ -511,7 +511,7 @@ local function updateEsp()
 
                     if ESP_SETTINGS.ShowName and ESP_SETTINGS.Enabled then
                         esp.name.Visible = true
-                        esp.name.Text = string.lower(player.Name)
+                        esp.name.Text = player.Name
                         esp.name.Position = Vector2.new(boxSize.X / 2 + boxPosition.X, boxPosition.Y - 16)
                         esp.name.Color = ESP_SETTINGS.NameColor
                     else
