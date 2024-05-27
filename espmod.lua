@@ -788,30 +788,21 @@ local function CheckIfIsNpc(Obj)
     end
     return false
 end
-for _______,ChildFolders in pairs(AiZones:GetChildren()) do
-    for ___,Object in pairs(ChildFolders:GetChildren()) do
-        local Check = CheckIfIsNpc(Object)
-        if Check == true then
-            createEspNPC(Object)
-        end
-    end
-end
-
-
-RunService.RenderStepped:Connect(updateEsp)
-RunService.RenderStepped:Connect(updateEspNPC)
-RunService.RenderStepped:Connect(function()
-    wait(.1)
+local function FindNPCs()
+    wait(.9)
     for _______,ChildFolders in pairs(AiZones:GetChildren()) do
         for ___,Object in pairs(ChildFolders:GetChildren()) do
-            local Check = CheckIfIsNpc(Object)
-            if Check == true then
+            if Object:FindFirstChild("HumanoidRootPart") then
                 if not cacheNPC[Object] then
                     createEspNPC(Object)
                 end
             end
         end
     end
-end)
+end
+
+RunService.RenderStepped:Connect(updateEsp)
+RunService.RenderStepped:Connect(updateEspNPC)
+RunService.RenderStepped:Connect(FindNPCs)
 
 return ESP_SETTINGS
