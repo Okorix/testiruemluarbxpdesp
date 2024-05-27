@@ -66,27 +66,58 @@ end
 
 local function GetClosestPlayer()
 	if not Environment.Locked then
-		RequiredDistance = (Environment.FOVSettings.Enabled and Environment.FOVSettings.Amount or 2000)
+		RequiredDistance = Environment.FOVSettings.Enabled and Environment.FOVSettings.Amount or 2000
 
-		for _, v in next, Players:GetPlayers() do
-			if v ~= LocalPlayer then
-				if v.Character and v.Character:FindFirstChild(Environment.Settings.LockPart) and v.Character:FindFirstChildOfClass("Humanoid") then
-					if Environment.Settings.TeamCheck and v.Team == LocalPlayer.Team then continue end
-					if Environment.Settings.AliveCheck and v.Character:FindFirstChildOfClass("Humanoid").Health <= 0 then continue end
-					if Environment.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v.Character[Environment.Settings.LockPart].Position}, v.Character:GetDescendants())) > 0 then continue end
+		-- Поиск игроков
+		for _, v in ipairs(workspace:GetChildren()) do
+			if v:IsA("Model") and v:FindFirstChild("Humanoid") and v ~= LocalPlayer.Character then
+                if v:FindFirstChild(Environment.Settings.LockPart) and v:FindFirstChildOfClass("Humanoid") then
+                    local IsPlayer = false
+                    local Player
+                    if Players:GetPlayerFromCharacter(v) then
+                        IsPlayer = true
+                        Player = Players:GetPlayerFromCharacter(v)
+                    else
+                        IsPlayer = false
+                    end
+                    if IsPlayer and Environment.Settings.TeamCheck and Player.Team == LocalPlayer.Team then 
+                        continue
+                    end
+                    if Environment.Settings.AliveCheck and v:FindFirstChildOfClass("Humanoid").Health <= 0 then 
+                        continue
+                    end
+                    if Environment.Settings.WallCheck and #(Camera:GetPartsObscuringTarget({v[Environment.Settings.LockPart].Position}, v:GetChildren())) > 0 then 
+                        continue 
+                    end
 
-					local Vector, OnScreen = Camera:WorldToViewportPoint(v.Character[Environment.Settings.LockPart].Position)
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(v[Environment.Settings.LockPart].Position)
+                    local Distance = (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Vector.X, Vector.Y)).Magnitude
+
+                    if Distance < RequiredDistance and OnScreen then
+                        RequiredDistance = Distance
+                        Environment.Locked = v
+                    end
+				end
+			end
+        end
+        
+		for _, aizone in ipairs(workspace:FindFirstChild("AiZones"):GetChildren()) do
+			for _, npc in ipairs(aizone:GetChildren()) do
+				if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and npc:FindFirstChild(Environment.Settings.LockPart) and npc:FindFirstChildOfClass("Humanoid") then
+					local Vector, OnScreen = Camera:WorldToViewportPoint(npc[Environment.Settings.LockPart].Position)
 					local Distance = (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Vector.X, Vector.Y)).Magnitude
 
 					if Distance < RequiredDistance and OnScreen then
 						RequiredDistance = Distance
-						Environment.Locked = v
+						Environment.Locked = npc
 					end
 				end
 			end
 		end
-	elseif (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position).X, Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position).Y)).Magnitude > RequiredDistance then
-		CancelLock()
+	else
+		if (Vector2(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2(Camera:WorldToViewportPoint(Environment.Locked[Environment.Settings.LockPart].Position).X, Camera:WorldToViewportPoint(Environment.Locked[Environment.Settings.LockPart].Position).Y)).Magnitude > RequiredDistance then
+			CancelLock()
+		end
 	end
 end
 
@@ -124,14 +155,14 @@ local function Load()
 				if Environment.Settings.ThirdPerson then
 					Environment.Settings.ThirdPersonSensitivity = mathclamp(Environment.Settings.ThirdPersonSensitivity, 0.1, 5)
 
-					local Vector = Camera:WorldToViewportPoint(Environment.Locked.Character[Environment.Settings.LockPart].Position)
+					local Vector = Camera:WorldToViewportPoint(Environment.Locked[Environment.Settings.LockPart].Position)
 					mousemoverel((Vector.X - UserInputService:GetMouseLocation().X) * Environment.Settings.ThirdPersonSensitivity, (Vector.Y - UserInputService:GetMouseLocation().Y) * Environment.Settings.ThirdPersonSensitivity)
 				else
 					if Environment.Settings.Sensitivity > 0 then
-						Animation = TweenService:Create(Camera, TweenInfo.new(Environment.Settings.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked.Character[Environment.Settings.LockPart].Position)})
+						Animation = TweenService:Create(Camera, TweenInfo.new(Environment.Settings.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked[Environment.Settings.LockPart].Position)})
 						Animation:Play()
 					else
-						Camera.CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked.Character[Environment.Settings.LockPart].Position)
+						Camera.CFrame = CFrame.new(Camera.CFrame.Position, Environment.Locked[Environment.Settings.LockPart].Position)
 					end
 				end
 
@@ -555,8 +586,8 @@ Sections.FovSection:AddToggle({
 	end
 })
 Sections.FovSection:AddSlider({
-	text = "Amount", 
-	flag = 'Amount', 
+	text = "Radius", 
+	flag = 'Radius', 
 	suffix = "", 
 	value = 1.000,
 	min = 1.000, 
