@@ -35,13 +35,13 @@ local ESP_SETTINGS = {
     CharSize = Vector2.new(4, 6),
     Teamcheck = false,
     WallCheck = false,
-    Enabled = false,
-    ShowBox = false,
+    Enabled = true,
+    ShowBox = true,
     BoxType = "2D",
-    ShowName = false,
-    ShowHealth = false,
-    ShowDistance = false,
-    ShowWeapon = false,
+    ShowName = true,
+    ShowHealth = true,
+    ShowDistance = true,
+    ShowWeapon = true,
     ShowSkeletons = false,
     ShowTracer = false,
     TracerColor = Color3.new(1, 1, 1), 
@@ -210,7 +210,13 @@ local function updateEspNPC()
 
                     if ESP_SETTINGS.ShowName and ESP_SETTINGS.Enabled then
                         esp.name.Visible = true
-                        esp.name.Text = character.Name.." (NPC)"
+                        local lookingAt
+                        if character.LookAt.Value ~= nil then
+                            lookingAt = tostring(character.LookAt.Value.Name)
+                        else
+                            lookingAt = "nobody"
+                        end
+                        esp.name.Text = character.Name.." (NPC) Looking at: "..lookingAt
                         esp.name.Position = Vector2.new(boxSize.X / 2 + boxPosition.X, boxPosition.Y - 16)
                         esp.name.Color = ESP_SETTINGS.NameColor
                     else
