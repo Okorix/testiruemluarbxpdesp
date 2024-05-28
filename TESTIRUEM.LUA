@@ -302,6 +302,7 @@ local FullbrightEnabled = false
 local NoVisorEffect = false
 local NoGP5Effect = false
 local CToZoomEnabled = false
+local ExitEspHighlight = false
 
 Library:init() -- Initalizes Library Do Not Delete This
 
@@ -426,6 +427,25 @@ Sections.MiscSection:AddToggle({
         NoGP5Effect = Valuee
 	end
 })
+local function AddExitHighlight(Obj)
+    Obj.Transparency = 0
+    local Highlight = Instance.new("Highlight",Obj)
+    Highlight.Name = "ExitLocationHighlight"
+    Highlight.FillTransparency = 0
+    Highlight.OutlineTransparency = 1
+    Highlight.FillColor = Color3.new(0,255,0)
+end
+local function RemoveExitHighlight(Obj)
+    Obj.Transparency = 1
+    Obj.ExitLocationHighlight:Destroy()
+end
+local function CheckForHighlight(Obj)
+    if Obj:FindFirstChild("ExitLocationHighlight") then
+        return true
+    end
+    return false
+end
+
 Sections.MiscSection:AddToggle({
 	enabled = true,
 	text = "Exit locations green highlight",
@@ -433,20 +453,12 @@ Sections.MiscSection:AddToggle({
 	tooltip = "",
 	risky = false, -- turns text to red and sets label to risky
 	callback = function(Valuee)
-        if Valuee == true then
+        ExitEspHighlight = Valuee
+        if Valuee == false then
             for _,Objectt in pairs(workspace.NoCollision.ExitLocations:GetChildren()) do
-                Objectt.Transparency = 0
-                local Highlight = Instance.new("Highlight",Objectt)
-                Highlight.Name = "ExitLocationHighlight"
-                Highlight.FillTransparency = 0
-                Highlight.OutlineTransparency = 1
-                Highlight.FillColor = Color3.new(0,255,0)
-            end
-        else
-            for _,Objectt in pairs(workspace.NoCollision.ExitLocations:GetChildren()) do
-                if Objectt:FindFirstChild("ExitLocationHighlight") then
-                    Objectt.Transparency = 1
-                    Objectt.ExitLocationHighlight:Destroy()
+                local CheckHighlight = CheckForHighlight(Objectt)
+                if CheckHighlight == true then
+                    RemoveExitHighlight(Objectt)
                 end
             end
         end
@@ -693,6 +705,14 @@ RunService.RenderStepped:Connect(function()
             PlayerGui.MainGui.MainFrame.ScreenEffects.Mask.Visible = false
         else
             PlayerGui.MainGui.MainFrame.ScreenEffects.Mask.Visible = true
+        end
+    end
+    if ExitEspHighlight == true then
+        for _,Objectt in pairs(workspace.NoCollision.ExitLocations:GetChildren()) do
+            local Check = CheckForHighlight(Objectt)
+            if Check == false then
+                AddExitHighlight(Objectt)
+            end
         end
     end
 end)
