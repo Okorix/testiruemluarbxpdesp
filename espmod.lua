@@ -343,14 +343,14 @@ local function updateEspNPC()
                         esp.healthOutline.Visible = true
                         esp.health.Visible = true
                         esp.healthText.Visible = true
-                        local healthPercentage = player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth
+                        local healthPercentage = humanoid.Health / humanoid.MaxHealth
                         esp.healthOutline.From = Vector2.new(boxPosition.X - 6, boxPosition.Y + boxSize.Y)
                         esp.healthOutline.To = Vector2.new(esp.healthOutline.From.X, esp.healthOutline.From.Y - boxSize.Y)
                         esp.health.From = Vector2.new((boxPosition.X - 5), boxPosition.Y + boxSize.Y)
-                        esp.health.To = Vector2.new(esp.health.From.X, esp.health.From.Y - (player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth) * boxSize.Y)
+                        esp.health.To = Vector2.new(esp.health.From.X, esp.health.From.Y - (humanoid.Health / humanoid.MaxHealth) * boxSize.Y)
                         esp.health.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)      
                         esp.healthText.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
-                        esp.healthText.Text = tostring(player.Character.Humanoid.Health)
+                        esp.healthText.Text = tostring(humanoid.Health)
                         esp.healthText.Position = Vector2.new(esp.healthOutline.From.X / 1.01, esp.healthOutline.From.Y - boxSize.Y / 10)
 
                     else
