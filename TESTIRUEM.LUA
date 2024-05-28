@@ -490,6 +490,20 @@ Sections.MiscSection:AddButton({
 		end
 	end
 })
+Sections.MiscSection:AddSlider({
+	text = "Default FOV",
+	flag = 'FOVInGameSlider', 
+	suffix = "", 
+	value = tonumber(PlayerGui.MainGui.MainFrame.Settings.Menu.ScrollingFrame.Gameplay.Frame.DefaultFOV.Slider.TextBox.Text),
+	min = 1, 
+	max = 120,
+	increment = 1,
+	tooltip = "Use this slider in settings to work (Apply changes in settings after using the slider)",
+	risky = false,
+	callback = function(Valuee) 
+		PlayerGui.MainGui.MainFrame.Settings.Menu.ScrollingFrame.Gameplay.Frame.DefaultFOV.Slider.TextBox.Text = tostring(Valuee)
+	end
+})
 Sections.AimbotSection:AddToggle({
 	enabled = true,
 	text = "Enabled",
