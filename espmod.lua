@@ -352,7 +352,7 @@ local function updateEspNPC()
                         esp.healthText.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
                         local roundednum = math.floor(humanoid.Health * 100) / 100
                         esp.healthText.Text = tostring(math.max(roundednum, 0))
-                        esp.healthText.Position = Vector2.new(esp.healthOutline.From.X / 1.01, esp.healthOutline.From.Y - boxSize.Y / 10)
+                        esp.healthText.Position = Vector2.new(boxPosition.X - 18, boxPosition.Y + boxSize.Y / 23)
 
                     else
                         esp.healthOutline.Visible = false
@@ -664,7 +664,7 @@ local function updateEsp()
                         esp.healthText.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
                         local roundednum = math.floor(player.Character.Humanoid.Health * 100) / 100
                         esp.healthText.Text = tostring(math.max(roundednum, 0))
-                        esp.healthText.Position = Vector2.new(esp.healthOutline.From.X / 1.01, esp.healthOutline.From.Y - boxSize.Y / 10)
+                        esp.healthText.Position = Vector2.new(boxPosition.X - 18, boxPosition.Y + boxSize.Y / 23)
 
                     else
                         esp.healthOutline.Visible = false
