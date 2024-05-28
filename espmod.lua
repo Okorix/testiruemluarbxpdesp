@@ -85,7 +85,7 @@ local function createEsp(player)
             Color = ESP_SETTINGS.NameColor,
             Outline = true,
             Center = true,
-            Size = 13
+            Size = 12
         }),
         healthOutline = create("Line", {
             Thickness = 3,
@@ -93,6 +93,12 @@ local function createEsp(player)
         }),
         health = create("Line", {
             Thickness = 1
+        }),
+        healthText = create("Text", {
+            Color = ESP_SETTINGS.NameColor,
+            Outline = true,
+            Center = true,
+            Size = 11
         }),
         distance = create("Text", {
             Color = Color3.new(1, 1, 1),
@@ -138,7 +144,7 @@ local function createEspNPC(char)
             Color = ESP_SETTINGS.NameColor,
             Outline = true,
             Center = true,
-            Size = 13
+            Size = 12
         }),
         healthOutline = create("Line", {
             Thickness = 3,
@@ -146,6 +152,12 @@ local function createEspNPC(char)
         }),
         health = create("Line", {
             Thickness = 1
+        }),
+        healthText = create("Text", {
+            Color = ESP_SETTINGS.NameColor,
+            Outline = true,
+            Center = true,
+            Size = 11
         }),
         distance = create("Text", {
             Color = Color3.new(1, 1, 1),
@@ -330,15 +342,21 @@ local function updateEspNPC()
                     if ESP_SETTINGS.ShowHealth and ESP_SETTINGS.Enabled then
                         esp.healthOutline.Visible = true
                         esp.health.Visible = true
-                        local healthPercentage = character.Humanoid.Health / character.Humanoid.MaxHealth
+                        esp.healthText.Visible = true
+                        local healthPercentage = player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth
                         esp.healthOutline.From = Vector2.new(boxPosition.X - 6, boxPosition.Y + boxSize.Y)
                         esp.healthOutline.To = Vector2.new(esp.healthOutline.From.X, esp.healthOutline.From.Y - boxSize.Y)
                         esp.health.From = Vector2.new((boxPosition.X - 5), boxPosition.Y + boxSize.Y)
-                        esp.health.To = Vector2.new(esp.health.From.X, esp.health.From.Y - (character.Humanoid.Health / character.Humanoid.MaxHealth) * boxSize.Y)
-                        esp.health.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
+                        esp.health.To = Vector2.new(esp.health.From.X, esp.health.From.Y - (player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth) * boxSize.Y)
+                        esp.health.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)      
+                        esp.healthText.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
+                        esp.healthText.Text = tostring(player.Character.Humanoid.Health)
+                        esp.healthText.Position = Vector2.new(esp.healthOutline.From.X / 1.01, esp.healthOutline.From.Y - boxSize.Y / 10)
+
                     else
                         esp.healthOutline.Visible = false
                         esp.health.Visible = false
+                        esp.healthText.Visible = false
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
@@ -358,9 +376,13 @@ local function updateEspNPC()
                             end
                         end
                         if CurrentWeapon then
+                            esp.activeweapontext.Text = ""
                             esp.activeweapontext.Text = CurrentWeapon.Name
-                            esp.activeweapontext.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 25)
+                            esp.activeweapontext.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 19)
                             esp.activeweapontext.Visible = true
+                        else
+                            esp.activeweapontext.Text = ""
+                            esp.activeweapontext.Visible = false
                         end
                     else
                         esp.activeweapontext.Visible = false
@@ -631,15 +653,21 @@ local function updateEsp()
                     if ESP_SETTINGS.ShowHealth and ESP_SETTINGS.Enabled then
                         esp.healthOutline.Visible = true
                         esp.health.Visible = true
+                        esp.healthText.Visible = true
                         local healthPercentage = player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth
                         esp.healthOutline.From = Vector2.new(boxPosition.X - 6, boxPosition.Y + boxSize.Y)
                         esp.healthOutline.To = Vector2.new(esp.healthOutline.From.X, esp.healthOutline.From.Y - boxSize.Y)
                         esp.health.From = Vector2.new((boxPosition.X - 5), boxPosition.Y + boxSize.Y)
                         esp.health.To = Vector2.new(esp.health.From.X, esp.health.From.Y - (player.Character.Humanoid.Health / player.Character.Humanoid.MaxHealth) * boxSize.Y)
-                        esp.health.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
+                        esp.health.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)      
+                        esp.healthText.Color = ESP_SETTINGS.HealthLowColor:Lerp(ESP_SETTINGS.HealthHighColor, healthPercentage)
+                        esp.healthText.Text = tostring(player.Character.Humanoid.Health)
+                        esp.healthText.Position = Vector2.new(esp.healthOutline.From.X / 1.01, esp.healthOutline.From.Y - boxSize.Y / 10)
+
                     else
                         esp.healthOutline.Visible = false
                         esp.health.Visible = false
+                        esp.healthText.Visible = false
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
@@ -652,16 +680,20 @@ local function updateEsp()
                     end
                     if ESP_SETTINGS.ShowWeapon and ESP_SETTINGS.Enabled then
                         local CurrentWeapon = nil
-                        for _,Objectss in pairs(player.Character:GetChildren()) do
+                        for _,Objectss in pairs(character:GetChildren()) do
                             if Objectss:FindFirstChild("ItemRoot") then
                                 CurrentWeapon = Objectss
                                 break
                             end
                         end
                         if CurrentWeapon then
+                            esp.activeweapontext.Text = ""
                             esp.activeweapontext.Text = CurrentWeapon.Name
-                            esp.activeweapontext.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 25)
+                            esp.activeweapontext.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 19)
                             esp.activeweapontext.Visible = true
+                        else
+                            esp.activeweapontext.Text = ""
+                            esp.activeweapontext.Visible = false
                         end
                     else
                         esp.activeweapontext.Visible = false
