@@ -48,9 +48,7 @@ local ESP_SETTINGS = {
     TracerPosition = "Bottom",
     NPCLookingFunc = function(NPCName)
 
-    end,
-    -- NPCMaxShowDistanceStuds = 5000,
-    -- PlayerMaxShowDistanceStuds = 5000,
+    end
 }
 
 local function create(class, properties)
@@ -203,28 +201,12 @@ local function removeEspNPC(char)
 
     for _, drawingobj in pairs(cacheNPC[char]) do
         if drawingobj then
-            drawingobj:Remove()
+            drawingobj = nil
         end
     end
 
-
     cacheNPC[char] = nil
 end
--- local function distanceThing(character, maxShowDistance)
---     local rootPart = character:FindFirstChild("HumanoidRootPart")
---     local allowedToSee = false
---     if character.Humanoid.Health > 0 then
---         local distance = (camera.CFrame.p - rootPart.Position).Magnitude
---         if distance <= maxShowDistance then
---             allowedToSee = true
---         else
---             allowedToSee = false
---         end
---     else
---         allowedToSee = true
---     end
---     return allowedToSee
--- end
 local function updateEspNPC()
     for char, esp in pairs(cacheNPC) do
         local character, team = char, nil
@@ -234,7 +216,6 @@ local function updateEspNPC()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWallNPC(character)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            -- local distanceThingBool = distanceThing(character, ESP_SETTINGS.NPCMaxShowDistanceStuds)
             if rootPart and head and humanoid and shouldShow then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
@@ -384,6 +365,7 @@ local function updateEspNPC()
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
+                        local distance = (camera.CFrame.p - rootPart.Position).Magnitude
                         esp.distance.Text = string.format("%.1f studs", distance)
                         esp.distance.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 5)
                         esp.distance.Visible = true
@@ -539,10 +521,9 @@ local function removeEsp(player)
 
     for _, drawingobj in pairs(cache[player]) do
         if drawingobj then
-            drawingobj:Remove()
+            drawingobj = nil
         end
     end
-
 
     cache[player] = nil
 end
@@ -556,7 +537,6 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            -- local distanceThingBool = distanceThing(player.Character, ESP_SETTINGS.PlayerMaxShowDistanceStuds)
             if rootPart and head and humanoid and shouldShow then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
@@ -700,6 +680,7 @@ local function updateEsp()
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
+                        local distance = (camera.CFrame.p - rootPart.Position).Magnitude
                         esp.distance.Text = string.format("%.1f studs", distance)
                         esp.distance.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 5)
                         esp.distance.Visible = true
