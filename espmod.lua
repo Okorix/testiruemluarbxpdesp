@@ -1,5 +1,3 @@
--- esp.lua
---// Variables
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local localPlayer = Players.LocalPlayer
@@ -48,6 +46,9 @@ local ESP_SETTINGS = {
     TracerThickness = 2,
     SkeletonsColor = Color3.new(1, 1, 1),
     TracerPosition = "Bottom",
+    NPCLookingFunc = function(NPCName)
+
+    end
 }
 
 local function create(class, properties)
@@ -194,11 +195,14 @@ local function isPlayerBehindWallNPC(char)
     return hit and hit:IsA("Part")
 end
 local function removeEspNPC(char)
-    local esp = cacheNPC[char]
-    if not esp then return end
+    if not cacheNPC[char] then 
+        return 
+    end
 
-    for _, drawing in pairs(esp) do
-        drawing:Remove()
+    for _, drawingobj in pairs(cacheNPC[char]) do
+        if drawingobj then
+            drawingobj = nil
+        end
     end
 
     cacheNPC[char] = nil
@@ -511,11 +515,14 @@ local function isPlayerBehindWall(player)
 end
 
 local function removeEsp(player)
-    local esp = cache[player]
-    if not esp then return end
+    if not cache[player] then 
+        return 
+    end
 
-    for _, drawing in pairs(esp) do
-        drawing:Remove()
+    for _, drawingobj in pairs(cache[player]) do
+        if drawingobj then
+            drawingobj = nil
+        end
     end
 
     cache[player] = nil
@@ -818,7 +825,9 @@ Players.PlayerAdded:Connect(function(player)
 end)
 
 Players.PlayerRemoving:Connect(function(player)
-    removeEsp(player)
+    if cache[player] then
+        removeEsp(player)
+    end
 end)
 
 local AiZones = workspace.AiZones
@@ -834,7 +843,19 @@ local function FindNPCs()
         for ___,Object in pairs(ChildFolders:GetChildren()) do
             if Object:FindFirstChild("HumanoidRootPart") then
                 if not cacheNPC[Object] then
+                    local NPCName = Object.Name
                     createEspNPC(Object)
+                    local LookAtValue = Object.LookAt
+                    if LookAtValue then
+                        Object.LookAt.Changed:Connect(function()
+                            local Value = Object.LookAt.Value
+                            if Value ~= nil then
+                                if tostring(Value) == localPlayer.Name then
+                                    ESP_SETTINGS.NPCLookingFunc(NPCName)
+                                end
+                            end
+                        end)
+                    end
                 end
             end
         end
