@@ -223,6 +223,7 @@ local function distanceThing(character, maxShowDistance)
     else
         allowedToSee = true
     end
+    return allowedToSee
 end
 local function updateEspNPC()
     for char, esp in pairs(cacheNPC) do
