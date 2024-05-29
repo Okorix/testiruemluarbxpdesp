@@ -402,8 +402,36 @@ Sections.PlayersSection:AddToggle({
 	    ESP.ShowWeapon = Valuee
 	end
 })
+Sections.PlayersSection:AddSlider({
+	text = "NPC Max show distance",
+	flag = 'NPCMaxshowdistanceSlider', 
+	suffix = "", 
+	value = ESP.NPCMaxShowDistance,
+	min = 1, 
+	max = 10000,
+	increment = 1,
+	tooltip = "(in studs)",
+	risky = false,
+	callback = function(Valuee) 
+		ESP.NPCMaxShowDistance = Valuee
+	end
+})
+Sections.PlayersSection:AddSlider({
+	text = "Player max show distance",
+	flag = 'PlyMaxshowdistanceSlider', 
+	suffix = "", 
+	value = ESP.PlyMaxShowDistance,
+	min = 1, 
+	max = 10000,
+	increment = 1,
+	tooltip = "(in studs)",
+	risky = false,
+	callback = function(Valuee) 
+		ESP.PlyMaxShowDistance = Valuee
+	end
+})
 Sections.MiscSection:AddToggle({
-	enabled = true,
+	enabled = wtrue,
 	text = "Fullbright",
 	flag = "FullbrightEnabled",
 	tooltip = "",
