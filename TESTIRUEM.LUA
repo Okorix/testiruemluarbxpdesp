@@ -304,14 +304,14 @@ local CToZoomEnabled = false
 local ExitEspHighlight = false
 local NoVisorEffect = false
 
-Library:init() -- Initalizes Library Do Not Delete This
+Library:init()
 
 ESP.NPCLookingFunc = function(NPCName)
     local Text = NPCName.." is looking at you!"
     Library:SendNotification(Text, 5, Color3.new(255, 0, 0))
 end
 
-ESP.BoxType = "Corner Box Esp"
+ESP.BoxType = "2D"
 
 local Window = Library.NewWindow({
 	title = "TESTIRUEM.LUA",
@@ -400,6 +400,24 @@ Sections.PlayersSection:AddToggle({
 	risky = false, -- turns text to red and sets label to risky
 	callback = function(Valuee)
 	    ESP.ShowWeapon = Valuee
+	end
+})
+Sections.PlayersSection:AddList({
+	enabled = true,
+	text = "Box type",
+	flag = "BoxType",
+	multi = false,
+	tooltip = "",
+    risky = false,
+    dragging = false,
+    focused = false,
+	value = "Corner Box Esp",
+	values = {
+        "Corner Box Esp",
+        "2D",
+	},
+	callback = function(Valuee)
+	    ESP.BoxType = tostring(BoxType)
 	end
 })
 Sections.MiscSection:AddToggle({
