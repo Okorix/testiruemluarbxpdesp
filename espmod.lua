@@ -48,7 +48,9 @@ local ESP_SETTINGS = {
     TracerPosition = "Bottom",
     NPCLookingFunc = function(NPCName)
 
-    end
+    end,
+    NPCMaxShowDistanceStuds = 5000,
+    PlayerMaxShowDistanceStuds = 5000,
 }
 
 local function create(class, properties)
@@ -219,7 +221,8 @@ local function updateEspNPC()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWallNPC(character)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            if rootPart and head and humanoid and shouldShow then
+            local distance = (camera.CFrame.p - rootPart.Position).Magnitude
+            if rootPart and head and humanoid and shouldShow and distance <= ESP_SETTINGS.NPCMaxShowDistanceStuds then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
@@ -368,7 +371,6 @@ local function updateEspNPC()
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
-                        local distance = (camera.CFrame.p - rootPart.Position).Magnitude
                         esp.distance.Text = string.format("%.1f studs", distance)
                         esp.distance.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 5)
                         esp.distance.Visible = true
@@ -543,7 +545,8 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            if rootPart and head and humanoid and shouldShow then
+            local distance = (camera.CFrame.p - rootPart.Position).Magnitude
+            if rootPart and head and humanoid and shouldShow and distance <= ESP_SETTINGS.PlayerMaxShowDistanceStuds then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
@@ -686,7 +689,6 @@ local function updateEsp()
                     end
                     
                     if ESP_SETTINGS.ShowDistance and ESP_SETTINGS.Enabled then
-                        local distance = (camera.CFrame.p - rootPart.Position).Magnitude
                         esp.distance.Text = string.format("%.1f studs", distance)
                         esp.distance.Position = Vector2.new(boxPosition.X + boxSize.X / 2, boxPosition.Y + boxSize.Y + 5)
                         esp.distance.Visible = true
