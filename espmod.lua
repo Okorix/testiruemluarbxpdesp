@@ -210,6 +210,20 @@ local function removeEspNPC(char)
 
     cacheNPC[char] = nil
 end
+local function distanceThing(character, maxShowDistance)
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    local allowedToSee = false
+    if character.Humanoid.Health > 0 then
+        local distance = (camera.CFrame.p - rootPart.Position).Magnitude
+        if distance <= maxShowDistance then
+            allowedToSee = true
+        else
+            allowedToSee = false
+        end
+    else
+        allowedToSee = true
+    end
+end
 local function updateEspNPC()
     for char, esp in pairs(cacheNPC) do
         local character, team = char, nil
@@ -219,8 +233,8 @@ local function updateEspNPC()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWallNPC(character)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            local distance = (camera.CFrame.p - rootPart.Position).Magnitude
-            if rootPart and head and humanoid and shouldShow and distance <= ESP_SETTINGS.NPCMaxShowDistanceStuds then
+            local distanceThingBool = distanceThing(character, ESP_SETTINGS.NPCMaxShowDistanceStuds)
+            if rootPart and head and humanoid and shouldShow and distanceThingBool == true then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
@@ -541,8 +555,8 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            local distance = (camera.CFrame.p - rootPart.Position).Magnitude
-            if rootPart and head and humanoid and shouldShow and distance <= ESP_SETTINGS.PlayerMaxShowDistanceStuds then
+            local distanceThingBool = distanceThing(character, ESP_SETTINGS.PlayerMaxShowDistanceStuds)
+            if rootPart and head and humanoid and shouldShow and distanceThingBool == true then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
