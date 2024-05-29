@@ -299,10 +299,10 @@ local LocalPlayer = PlayersService.LocalPlayer
 local PlayerGui = LocalPlayer.PlayerGui
 local Lighting = game.Lighting
 local FullbrightEnabled = false
-local NoVisorEffect = false
 local NoGP5Effect = false
 local CToZoomEnabled = false
 local ExitEspHighlight = false
+local NoVisorEffect = false
 
 Library:init() -- Initalizes Library Do Not Delete This
 
@@ -407,6 +407,12 @@ Sections.MiscSection:AddToggle({
 	    FullbrightEnabled = Valuee
 	end
 })
+function hasProperty(object, propertyName)
+    local success, _ = pcall(function() 
+        object[propertyName] = object[propertyName]
+    end)
+    return success
+end
 Sections.MiscSection:AddToggle({
 	enabled = true,
 	text = "No visor effect",
@@ -414,7 +420,20 @@ Sections.MiscSection:AddToggle({
 	tooltip = "",
 	risky = false, -- turns text to red and sets label to risky
 	callback = function(Valuee)
-	    NoVisorEffect = Valuee
+        NoVisorEffect = Valuee
+        -- if PlayerGui:FindFirstChild("MainGui") then
+        --     local MainGui = PlayerGui.MainGui
+        --     local MainFrame = MainGui.MainFrame
+        --     local ScreenEffects = MainFrame.ScreenEffects
+        --     local VisorFrame = ScreenEffects.Visor
+        --     for _,ChildFolders in pairs(VisorFrame:GetChildren()) do
+        --         for _,ObjectsInFolder in pairs(ChildFolders:GetChildren()) do
+        --             if hasProperty(ObjectsInFolder, "Visible") then
+        --                 ObjectsInFolder.Visible = not Valuee
+        --             end
+        --         end
+        --     end
+        -- end
 	end
 })
 Sections.MiscSection:AddToggle({
