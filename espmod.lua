@@ -194,7 +194,7 @@ local function isPlayerBehindWallNPC(char)
     return hit and hit:IsA("Part")
 end
 local function removeEspNPC(char)
-    local esp = cache[char]
+    local esp = cacheNPC[char]
     if not esp then return end
 
     for _, drawing in pairs(esp) do
