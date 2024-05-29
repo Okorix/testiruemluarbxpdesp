@@ -402,7 +402,7 @@ Sections.PlayersSection:AddToggle({
 	    ESP.ShowWeapon = Valuee
 	end
 })
-Sections.MiscSection:AddSlider({
+Sections.PlayersSection:AddSlider({
 	text = "Player max show distance",
 	flag = 'PlayerMaxShowDistanceStudsSlider', 
 	suffix = "", 
@@ -416,7 +416,7 @@ Sections.MiscSection:AddSlider({
 		ESP.PlayerMaxShowDistanceStuds = Valuee
 	end
 })
-Sections.MiscSection:AddSlider({
+Sections.PlayersSection:AddSlider({
 	text = "NPC max show distance",
 	flag = 'NPCMaxShowDistanceStudsSlider', 
 	suffix = "", 
