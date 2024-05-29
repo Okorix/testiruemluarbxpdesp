@@ -306,6 +306,11 @@ local NoVisorEffect = false
 
 Library:init() -- Initalizes Library Do Not Delete This
 
+ESP.NPCLookingFunc = function(NPCName)
+    local Text = NPCName.." is looking at you!"
+    Library:SendNotification(Text, 5, Color3.new(255, 0, 0))
+end
+
 ESP.BoxType = "Corner Box Esp"
 
 local Window = Library.NewWindow({
@@ -773,3 +778,5 @@ game:GetService("UserInputService").InputEnded:Connect(function(Input)
         DoZoom(ZoomSettings.ZoomTime, OldZoomFOV):Play()
     end
 end)
+
+Library:SendNotification("TESTIRUEM LOADED HAVE FUN", 5, Color3.new(255, 0, 0))
