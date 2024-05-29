@@ -556,7 +556,7 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            local distanceThingBool = distanceThing(character, ESP_SETTINGS.PlayerMaxShowDistanceStuds)
+            local distanceThingBool = distanceThing(player.Character, ESP_SETTINGS.PlayerMaxShowDistanceStuds)
             if rootPart and head and humanoid and shouldShow and distanceThingBool == true then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
