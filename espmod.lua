@@ -33,13 +33,13 @@ local ESP_SETTINGS = {
     CharSize = Vector2.new(4, 6),
     Teamcheck = false,
     WallCheck = false,
-    Enabled = false,
-    ShowBox = false,
+    Enabled = true,
+    ShowBox = true,
     BoxType = "2D",
-    ShowName = false,
-    ShowHealth = false,
-    ShowDistance = false,
-    ShowWeapon = false,
+    ShowName = true,
+    ShowHealth = true,
+    ShowDistance = true,
+    ShowWeapon = true,
     ShowSkeletons = false,
     ShowTracer = false,
     TracerColor = Color3.new(1, 1, 1), 
@@ -48,7 +48,9 @@ local ESP_SETTINGS = {
     TracerPosition = "Bottom",
     NPCLookingFunc = function(NPCName)
 
-    end
+    end,
+    NPCMaxShowDistance = 5000,
+    PlyMaxShowDistance = 5000,
 }
 
 local function create(class, properties)
@@ -209,6 +211,20 @@ local function removeEspNPC(char)
 
     cacheNPC[char] = nil
 end
+local function getBoolDistance(character, distanceNum)
+    local bool = false
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then
+        bool = true
+    end
+    local distance = (camera.CFrame.p - rootPart.Position).Magnitude
+    if distance <= distanceNum then
+        bool = true
+    else
+        bool = false
+    end
+    return bool
+end
 local function updateEspNPC()
     for char, esp in pairs(cacheNPC) do
         local character, team = char, nil
@@ -218,7 +234,7 @@ local function updateEspNPC()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWallNPC(character)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            if rootPart and head and humanoid and shouldShow then
+            if rootPart and head and humanoid and shouldShow and getBoolDistance(character, ESP_SETTINGS.NPCMaxShowDistance) == true then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
@@ -541,7 +557,7 @@ local function updateEsp()
             local humanoid = character:FindFirstChild("Humanoid")
             local isBehindWall = ESP_SETTINGS.WallCheck and isPlayerBehindWall(player)
             local shouldShow = not isBehindWall and ESP_SETTINGS.Enabled
-            if rootPart and head and humanoid and shouldShow then
+            if rootPart and head and humanoid and shouldShow and getBoolDistance(player.Character, ESP_SETTINGS.PlyMaxShowDistance) == true then
                 local position, onScreen = camera:WorldToViewportPoint(rootPart.Position)
                 if onScreen then
                     local hrp2D = camera:WorldToViewportPoint(rootPart.Position)
