@@ -203,9 +203,7 @@ local function removeEspNPC(char)
 
     for _, drawingobj in pairs(cacheNPC[char]) do
         if drawingobj then
-            local no,yes = pcall(function()
-                drawingobj:Remove()
-            end)
+            drawingobj:Remove()
         end
     end
 
@@ -526,9 +524,7 @@ local function removeEsp(player)
 
     for _, drawingobj in pairs(cache[player]) do
         if drawingobj then
-            local no,yes = pcall(function()
-                drawingobj:Remove()
-            end)
+            drawingobj:Remove()
         end
     end
 
