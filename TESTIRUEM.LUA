@@ -402,24 +402,6 @@ Sections.PlayersSection:AddToggle({
 	    ESP.ShowWeapon = Valuee
 	end
 })
-Sections.PlayersSection:AddList({
-	enabled = true,
-	text = "Box type",
-	flag = "BoxType",
-	multi = false,
-	tooltip = "",
-    risky = false,
-    dragging = false,
-    focused = false,
-	value = "Corner Box Esp",
-	values = {
-        "Corner Box Esp",
-        "2D",
-	},
-	callback = function(Valuee)
-	    ESP.BoxType = tostring(BoxType)
-	end
-})
 Sections.MiscSection:AddToggle({
 	enabled = true,
 	text = "Fullbright",
