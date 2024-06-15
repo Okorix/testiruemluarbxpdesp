@@ -314,7 +314,7 @@ end
 ESP.BoxType = "2D"
 
 local Window = Library.NewWindow({
-	title = "TESTIRUEM.LUA",
+	title = "TESTIRUEM.LUA | PROJECT DELTA",
 	size = UDim2.new(0, 525, 0, 650)
 })
 
